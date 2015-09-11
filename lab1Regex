@@ -1,0 +1,240 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace RexExpExamples
+{
+    class Examples
+    {
+        public void PositiveCharacterGroup()
+        {
+            string pattern = @"L[oa][oa][dk]\s\S+?[\s\p{P}]";
+            string input = "Look at that sky Load out.";
+            
+            MatchCollection match = Regex.Matches(input, pattern);
+            
+            Console.WriteLine("Jishee-1");
+            
+            foreach (Match mat in match)
+            {
+                    Console.WriteLine(mat.Value);
+            }
+            
+            Console.Read();
+        }
+
+        public void PositiveCharacterGroup1()
+        {
+            string pattern = @"\b[A-Z]\w*\b";
+            string input = "Animal Bird Wings Lost Notebook king Good";
+            
+            Console.WriteLine("Jishee-2");
+            
+            foreach (Match mat in Regex.Matches(input, pattern))
+            {
+                Console.WriteLine(mat.Value);
+            }
+            
+            Console.Read();
+        }
+
+        public void NegativeCharacterGroup()
+        {
+            string pattern = @"\bth[^o]\w*\s\S+?\b";
+            string input = "the Animal the Bird the Wings the Lost the Notebook tho king the Good";
+            
+            Console.WriteLine("Jishee-3");
+            
+            foreach (Match mat in Regex.Matches(input, pattern))
+            {
+                Console.WriteLine(mat.Value);
+            }
+            
+            Console.Read();
+        }
+        
+        public void AnyCharacter()
+        {
+            string pattern = "^.+";
+            string input = "the Animal the Bird the Wings the Lost the Notebook tho king the Good";
+            
+            Console.WriteLine("Jishee-4");
+            
+            foreach (Match mat in Regex.Matches(input, pattern, RegexOptions.Singleline))
+            {
+                Console.WriteLine(Regex.Escape(mat.Value));
+                Console.WriteLine(mat.Value);
+            }
+            
+            Console.Read();
+        }
+        
+        public void AnyCharacter1()
+        {
+            string pattern = @"\b.*[.,?!;:](\s|\z)";
+            string input = "this. what: is? go, thing.";
+            
+            foreach (Match match in Regex.Matches(input, pattern))
+                Console.WriteLine(match.Value);
+                
+            Console.Read();
+        }
+        
+        public void UnicodeCategoryOrBlock()
+        {
+            string pattern = @"\b(\p{IsGreek}+(\s)?)+\p{Pd}\s(\p{IsBasicLatin}+(\s)?)+";
+            string input = "Κατα Μαθθαίον - The Gospel of Matthew";
+
+            Console.WriteLine(Regex.IsMatch(input, pattern));
+            
+            Console.Read();
+        }
+        
+        public void NegativeUnicodeCategoryOrBlock()
+        {
+            string pattern = @"(\P{Sc})+";
+            string[] values = { "$164,091.78", "£1,073,142.68", "73¢", "€120" };
+            
+            foreach (string value in values)
+                Console.WriteLine(Regex.Match(value, pattern).Value);
+                
+            Console.Read();
+        }
+
+        public void WordCharacter()
+        {
+            string pattern = @"(\w)\1";
+            string[] words = {"orange", "apple", "there", "Look","boy","white-space" };
+            
+            foreach (string word in words)
+            {
+                Match match = Regex.Match(word,pattern);
+                
+                if (match.Success)
+                {
+                    Console.WriteLine("'{0}' found in '{1}' at position {2}.", match.Value, word, match.Index);
+                }
+                else
+                {
+                    Console.WriteLine("No double characters in '{0}'.",word);
+                }
+            }
+            Console.Read();
+        }
+
+        public void NonWordCharacter()
+        {
+            string pattern = @"\b(\w+)(\W){1,2}";
+            string input = "The old, grey mare slowly walked across the narrow, green pasture.";
+            
+            foreach (Match match in Regex.Matches(input,pattern))
+            {
+                Console.Write(match.Value);
+                Console.Write("Non-word character(s):");
+                
+                CaptureCollection captures = match.Groups[2].Captures;
+                
+                for(int ctr = 0; ctr < captures.Count; ctr++)
+                {
+                    Console.Write(@"'{0}' (\u{1}){2}", captures[ctr].Value,
+                            Convert.ToUInt16(captures[ctr].Value[0]).ToString("X4"),
+                            ctr < captures.Count - 1 ? ", " : "");
+                            
+                    Console.WriteLine();
+                }
+            }
+            
+            Console.Read();
+        }
+        
+        public void WhiteSpaceCharacter()
+        {
+            string pattern = @"\b\w+(e)?s(\s|$)";
+            string input = "caches cats cans carrots cool colums colliders";
+            
+            foreach (Match match in Regex.Matches(input,pattern))
+            {
+                Console.Write(match.Value);
+            }
+            
+            Console.Read();
+        }
+        
+        public void NonWhiteSpaceCharacter()
+        {
+            string pattern = @"\b(\S+)\s?";
+            string input = "caches cats cans carrots cool colums colliders";
+            
+            foreach (Match match in Regex.Matches(input, pattern))
+            {
+                Console.WriteLine(match.Groups[0]);
+            }
+            
+            Console.Read();
+        }
+        public void DecimalDigitalChar()
+        {
+            string pattern = @"^(\(?\d{3}\)?[\s-])?\d{3}-\d{4}$";
+            string[] inputs = { "111 111-1111", "222-2222", "222 333-444",
+                          "(212) 111-1111", "111-AB1-1111",
+                          "212-111-1111", "01 999-9999" };
+
+            foreach (string input in inputs)
+            {
+                if (Regex.IsMatch(input, pattern))
+                    Console.WriteLine(input + ": matched");
+                else
+                    Console.WriteLine(input + ": match failed");
+            }
+
+            Console.Read();
+        }
+        public void NonDecimalDigitalChar()
+        {
+            string pattern = @"^\D\d{1,5}\D*$";
+            string[] inputs = { "A1039C", "AA0001", "C18A", "Y938518" };
+
+            foreach (string input in inputs)
+            {
+                if (Regex.IsMatch(input, pattern))
+                    Console.WriteLine(input + ": matched");
+                else
+                    Console.WriteLine(input + ": match failed");
+            }
+            
+            Console.Read();
+        }
+    }
+
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace RexExpExamples
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Examples ex1 = new Examples();
+            // ex1.PositiveCharacterGroup();
+            // ex1.PositiveCharacterGroup1();
+            // ex1.NegativeCharacterGroup();
+            // ex1.AnyCharacter();
+            // ex1.UnicodeCategoryOrBlock();
+            // ex1.NegativeUnicodeCategoryOrBlock();
+            // ex1.WordCharacter();
+            // ex1.NonWordCharacter();
+            // ex1.WhiteSpaceCharacter();
+            ex1.NonWhiteSpaceCharacter();
+        }
+    }
+}
