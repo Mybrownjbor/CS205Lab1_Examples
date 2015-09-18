@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace Lecser
+{
+    class Token
+    {
+        public string value;
+        public string type;
+
+        public Token()
+        {
+
+        }
+
+        public Token(string keywords, string word)
+        {
+            value = word;
+            type = keywords;
+        }
+
+        public void to_string()
+        {
+            Console.WriteLine("Token Type: " + this.type + "Value: " + this.value);
+        }
+    }
+
+    class Lexer
+    {
+        private int current_line;
+        private int current_column;
+
+        string reg = @"\b[A-Z]\s+S\b";
+        string eof_value = "@";
+        string[] keywords = {"int", "class", "void", "while", "public", "private", "string", "char"};
+
+        
+
+
+        public char next_char()
+        {
+            TextReader reader;
+            reader = File.OpenText(@"E:\Hicheel\D.SE302\RexExpExamples\Lecser\Lines.txt");
+            char[] ch = new char[1028];
+
+                if (current_column >= current_line)
+                {
+                    current_line++;a
+                    current_column = 0;
+                }
+                reader.ReadBlock(ch, 0,1028);
+                current_column++;
+                return ch[current_column+=1];
+        }
+
+
+        public void SaveFileText()
+        {
+             File.WriteAllLines(@"E:\Hicheel\D.SE302\RexExpExamples\Lecser\Lines.txt", keywords);
+            
+        }
+        public void ReadFileTexter()
+        {
+            Console.Write(File.ReadAllText(@"E:\Hicheel\D.SE302\RexExpExamples\Lecser\Lines.txt"));
+        }
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lecser
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Lexer l = new Lexer();
+            l.SaveFileText();
+            l.ReadFileTexter();
+            l.next_char();
+            l.next_char();
+            Console.Write("Next char: " + l.next_char());
+            Console.Read();
+           /* while ()
+            {
+                l.next_token();
+                break;
+            }*/
+        }
+    }
+}
